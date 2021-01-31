@@ -4,6 +4,7 @@ const gameRoutes = (app) => {
   let callAFriend = false;
   let askTheCroud = false;
   let fiftyFifty = false;
+  let isGameOver = false;
 
   const quesions = [
     {
@@ -25,12 +26,28 @@ const gameRoutes = (app) => {
 
   app.get("/question", (req, res) => {
     if (correctAnswers === quesions.length) res.json({ winner: true });
+    else if (isGameOver) res.json({ loser: true });
     else {
       const nextQuestion = quesions[correctAnswers];
       const { question, answers } = nextQuestion;
 
       res.json({ question, answers });
     }
+  });
+
+  app.post("/answer/:index", (req, res) => {
+    if (isGameOver) res.json({ loser: true });
+
+    const { index } = req.params;
+    const actualQuestion = quesions[correctAnswers];
+    const isCorrectAnswer = actualQuestion.correctAnswer === Number(index);
+
+    if (isCorrectAnswer) correctAnswers++;
+    else isGameOver = true;
+
+    res.json({
+      correct: isCorrectAnswer,
+    });
   });
 };
 
