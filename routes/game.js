@@ -49,6 +49,24 @@ const gameRoutes = (app) => {
       correct: isCorrectAnswer,
     });
   });
+
+  app.get("/help/friend", (req, res) => {
+    if (callAFriend) {
+      return res.json({ text: "It was used " });
+    }
+
+    callAFriend = true;
+
+    const doesFriendKnowAnswer = Math.random() < 0.5;
+
+    const actualQuestion = quesions[correctAnswers];
+
+    res.json({
+      text: doesFriendKnowAnswer
+        ? `Hmm, Maybe ${actualQuestion.answers[actualQuestion.correctAnswer]}`
+        : "IDK",
+    });
+  });
 };
 
 module.exports = gameRoutes;

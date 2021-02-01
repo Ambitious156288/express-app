@@ -9,6 +9,12 @@ const fillQuestionElement = (data) => {
     return;
   }
 
+  if (data.loser === true) {
+    gameBoard.style.display = "none";
+    h2.innerText = "YOU LOSE!!!";
+    return;
+  }
+
   question.innerText = data.question;
 
   for (const i in data.answers) {
@@ -42,7 +48,7 @@ const sendAnswer = (answerIndex) => {
     });
 };
 
-const buttons = document.querySelectorAll("button");
+const buttons = document.querySelectorAll("answer-button");
 
 for (const button of buttons) {
   button.addEventListener("click", (event) => {
@@ -50,3 +56,13 @@ for (const button of buttons) {
     sendAnswer(answerIndex);
   });
 }
+
+const callAFriend = () => {
+  fetch(`/help/friend`, { method: "GET" })
+    .then((res) => res.json())
+    .then((data) => {
+      console.log(data);
+    });
+};
+
+document.querySelector("#callAFriend").addEventListener("click", callAFriend);
